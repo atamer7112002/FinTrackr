@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'core/di/injection_container.dart' as di;
-import 'features/sim_management/presentation/pages/sim_management_screen.dart';
+import 'core/router/app_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,14 +13,14 @@ class FintechApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Fintech SIM Manager',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const SimManagementScreen(),
+      routerConfig: router,
     );
   }
 }
