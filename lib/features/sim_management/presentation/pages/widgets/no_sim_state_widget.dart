@@ -10,54 +10,71 @@ class NoSimStateWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        padding: const EdgeInsets.all(32),
-        margin: const EdgeInsets.symmetric(horizontal: 24),
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 24),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.grey.withOpacity(0.1)),
+          boxShadow: [
+            BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10),
+          ],
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
+              width: 100,
+              height: 100,
+              decoration: const BoxDecoration(
+                color: Color(0xFFF5F5F5),
                 shape: BoxShape.circle,
               ),
               child: Icon(
-                Icons.sim_card_outlined,
-                size: 40,
+                Icons.phone_android_outlined,
+                size: 48,
                 color: Colors.grey[600],
               ),
             ),
             const SizedBox(height: 24),
             const Text(
               'No SIM Cards Detected',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             Text(
               'please insert a sim card into your device\nto continue. make sure the sim card is\nproperly seated in the sim tray.',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey[600],
+                height: 1.5,
+              ),
             ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () => context.read<SimBloc>().add(RefreshSimCards()),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 12,
+            const SizedBox(height: 32),
+            SizedBox(
+              width: 160,
+              child: ElevatedButton(
+                onPressed: () {
+                  context.read<SimBloc>().add(LoadSimCards());
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                child: const Text(
+                  'Retry',
+                  style: TextStyle(fontWeight: FontWeight.w600),
                 ),
               ),
-              child: const Text('Retry'),
             ),
           ],
         ),

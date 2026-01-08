@@ -72,8 +72,15 @@ class SimBloc extends Bloc<SimEvent, SimState> {
     SyncSimCards event,
     Emitter<SimState> emit,
   ) async {
-    await Future.delayed(const Duration(seconds: 2));
-    add(RefreshSimCards());
+    if (state is SimLoaded) {
+      emit(SimLoading());
+      await Future.delayed(const Duration(seconds: 2));
+      final result = await getSimCards(NoParams());
+      result.fold(
+        (failure) => emit(SimError(failure)),
+        (simCards) => emit(SimLoaded(simCards)),
+      );
+    }
   }
 
   Future<void> _onCheckPermissions(
