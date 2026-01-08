@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/entities/sim_card.dart';
+import '../../bloc/sim_bloc.dart';
+import '../../bloc/sim_event.dart';
 
 class SimCardWidget extends StatelessWidget {
   final SimCard simCard;
@@ -120,13 +123,22 @@ class SimCardWidget extends StatelessWidget {
                 _getConnectionStatusText(simCard.connectionStatus),
                 _getConnectionStatusColor(simCard.connectionStatus),
               ),
+              const SizedBox(width: 8),
+              _buildStatusChip(
+                Icons.signal_cellular_alt,
+                'Network',
+                _getNetworkTypeText(simCard.networkType),
+                const Color(0xFF2196F3),
+              ),
             ],
           ),
           const SizedBox(height: 12),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                context.read<SimBloc>().add(SyncSimCards());
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
                 foregroundColor: Colors.white,
@@ -205,6 +217,23 @@ class SimCardWidget extends StatelessWidget {
         return const Color(0xFFFF9800);
       case ConnectionStatus.notConnected:
         return const Color(0xFFEF5350);
+    }
+  }
+
+  String _getNetworkTypeText(NetworkType type) {
+    switch (type) {
+      case NetworkType.twoG:
+        return '2G';
+      case NetworkType.threeG:
+        return '3G';
+      case NetworkType.fourG:
+        return '4G';
+      case NetworkType.fiveG:
+        return '5G';
+      case NetworkType.wifi:
+        return 'WiFi';
+      case NetworkType.unknown:
+        return 'Unknown';
     }
   }
 }

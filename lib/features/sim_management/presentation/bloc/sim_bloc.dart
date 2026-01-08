@@ -19,6 +19,7 @@ class SimBloc extends Bloc<SimEvent, SimState> {
   }) : super(SimInitial()) {
     on<LoadSimCards>(_onLoadSimCards);
     on<RefreshSimCards>(_onRefreshSimCards);
+    on<SyncSimCards>(_onSyncSimCards);
     on<CheckPermissions>(_onCheckPermissions);
     on<RequestPermissions>(_onRequestPermissions);
   }
@@ -65,6 +66,14 @@ class SimBloc extends Bloc<SimEvent, SimState> {
         emit(SimError(failure));
       }
     }, (simCards) => emit(SimLoaded(simCards)));
+  }
+
+  Future<void> _onSyncSimCards(
+    SyncSimCards event,
+    Emitter<SimState> emit,
+  ) async {
+    await Future.delayed(const Duration(seconds: 2));
+    add(RefreshSimCards());
   }
 
   Future<void> _onCheckPermissions(

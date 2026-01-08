@@ -37,6 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
       context.go('/sim-management');
     } else {
       if (mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('Authentication failed')));

@@ -11,6 +11,8 @@ class LoadSimCards extends SimEvent {}
 
 class RefreshSimCards extends SimEvent {}
 
+class SyncSimCards extends SimEvent {}
+
 class CheckPermissions extends SimEvent {}
 
 class RequestPermissions extends SimEvent {}
