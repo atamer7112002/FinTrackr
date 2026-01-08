@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../bloc/sim_bloc.dart';
 import '../bloc/sim_event.dart';
 import '../bloc/sim_state.dart';
@@ -11,8 +13,49 @@ import 'widgets/permission_required_widget.dart';
 import 'widgets/error_state_widget.dart';
 import 'widgets/quick_tips_widget.dart';
 
-class SimManagementScreen extends StatelessWidget {
+class SimManagementScreen extends StatefulWidget {
   const SimManagementScreen({super.key});
+
+  @override
+  State<SimManagementScreen> createState() => _SimManagementScreenState();
+}
+
+class _SimManagementScreenState extends State<SimManagementScreen>
+    with WidgetsBindingObserver {
+  late SimBloc _simBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _simBloc = sl<SimBloc>()..add(LoadSimCards());
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // Immediately check permissions and reload when app resumes
+      Future.delayed(const Duration(milliseconds: 300), () {
+        _checkPermissionsAndReload();
+      });
+    }
+  }
+
+  Future<void> _checkPermissionsAndReload() async {
+    final phonePermission = await Permission.phone.isGranted;
+    final smsPermission = await Permission.sms.isGranted;
+
+    if (phonePermission && smsPermission && mounted) {
+      // Force reload to clear PermissionDenied state
+      _simBloc.add(LoadSimCards());
+    }
+  }
 
   Future<bool> _onWillPop(BuildContext context) async {
     final result = await showDialog<bool>(
@@ -37,32 +80,23 @@ class SimManagementScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<SimBloc>()..add(LoadSimCards()),
+    return BlocProvider.value(
+      value: _simBloc,
       child: PopScope(
         canPop: false,
         onPopInvokedWithResult: (didPop, result) async {
           if (didPop) return;
           final shouldPop = await _onWillPop(context);
           if (shouldPop && context.mounted) {
-            Navigator.of(context).pop();
+            SystemNavigator.pop();
           }
         },
         child: Scaffold(
-          backgroundColor: const Color(
-            0xFFF8F9FA,
-          ), // Off-white background from image
+          backgroundColor: const Color(0xFFF8F9FA),
           appBar: AppBar(
+            automaticallyImplyLeading: false,
             backgroundColor: Colors.transparent,
             elevation: 0,
-            leading: IconButton(
-              icon: const Icon(
-                Icons.arrow_back_ios,
-                color: Colors.black,
-                size: 20,
-              ),
-              onPressed: () => Navigator.pop(context),
-            ),
             centerTitle: true,
             title: const Text(
               'SIM Management',
@@ -84,7 +118,6 @@ class SimManagementScreen extends StatelessWidget {
             child: Column(
               children: [
                 const SizedBox(height: 16),
-                // Top Action Buttons
                 Row(
                   children: [
                     Expanded(
@@ -113,8 +146,6 @@ class SimManagementScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 24),
-
-                // Content
                 Expanded(
                   child: BlocBuilder<SimBloc, SimState>(
                     builder: (context, state) {

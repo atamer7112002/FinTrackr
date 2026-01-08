@@ -1,10 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../bloc/sim_bloc.dart';
 import '../../bloc/sim_event.dart';
 
-class PermissionRequiredWidget extends StatelessWidget {
+class PermissionRequiredWidget extends StatefulWidget {
   const PermissionRequiredWidget({super.key});
+
+  @override
+  State<PermissionRequiredWidget> createState() =>
+      _PermissionRequiredWidgetState();
+}
+
+class _PermissionRequiredWidgetState extends State<PermissionRequiredWidget> {
+  bool _isRequesting = false;
+
+  Future<void> _handlePermissionRequest() async {
+    setState(() => _isRequesting = true);
+
+    // Request permissions using the native method
+    final phoneStatus = await Permission.phone.request();
+    final smsStatus = await Permission.sms.request();
+
+    // Check if both permissions were granted
+    final granted = phoneStatus.isGranted && smsStatus.isGranted;
+
+    if (mounted) {
+      setState(() => _isRequesting = false);
+
+      if (granted) {
+        // Permissions granted! Load SIM data immediately
+        context.read<SimBloc>().add(LoadSimCards());
+      } else {
+        // Permission denied, show message
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Permission denied. Please grant permissions to continue.',
+            ),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +83,7 @@ class PermissionRequiredWidget extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              'This app needs permission to access\nsim card information. please grant the\nnecessary permissions in your device\nsettings.',
+              'This app needs permission to access\nsim card information. Please grant the\nnecessary permissions.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14,
@@ -54,10 +93,9 @@ class PermissionRequiredWidget extends StatelessWidget {
             ),
             const SizedBox(height: 32),
             SizedBox(
-              width: 160,
+              width: 180,
               child: ElevatedButton(
-                onPressed: () =>
-                    context.read<SimBloc>().add(RequestPermissions()),
+                onPressed: _isRequesting ? null : _handlePermissionRequest,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
                   foregroundColor: Colors.white,
@@ -66,10 +104,24 @@ class PermissionRequiredWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: const Text(
-                  'Retry',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
+                child: _isRequesting
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white,
+                          ),
+                        ),
+                      )
+                    : const Text(
+                        'Grant Permission',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
               ),
             ),
           ],

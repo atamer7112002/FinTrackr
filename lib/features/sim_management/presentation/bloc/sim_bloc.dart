@@ -56,6 +56,7 @@ class SimBloc extends Bloc<SimEvent, SimState> {
     RefreshSimCards event,
     Emitter<SimState> emit,
   ) async {
+    emit(SimLoading());
     final result = await getSimCards(NoParams());
     result.fold((failure) {
       if (failure is NoSimCardsFailure) {
@@ -102,6 +103,7 @@ class SimBloc extends Bloc<SimEvent, SimState> {
     final result = await requestPermissions(NoParams());
     result.fold((failure) => emit(PermissionDenied()), (granted) {
       if (granted) {
+        emit(SimLoading());
         add(LoadSimCards());
       } else {
         emit(PermissionDenied());
