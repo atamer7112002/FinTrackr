@@ -18,21 +18,17 @@ class _PermissionRequiredWidgetState extends State<PermissionRequiredWidget> {
   Future<void> _handlePermissionRequest() async {
     setState(() => _isRequesting = true);
 
-    // Request permissions using the native method
     final phoneStatus = await Permission.phone.request();
     final smsStatus = await Permission.sms.request();
 
-    // Check if both permissions were granted
     final granted = phoneStatus.isGranted && smsStatus.isGranted;
 
     if (mounted) {
       setState(() => _isRequesting = false);
 
       if (granted) {
-        // Permissions granted! Load SIM data immediately
         context.read<SimBloc>().add(LoadSimCards());
       } else {
-        // Permission denied, show message
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(

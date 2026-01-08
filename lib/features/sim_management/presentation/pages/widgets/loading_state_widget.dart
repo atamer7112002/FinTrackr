@@ -30,7 +30,6 @@ class LoadingStateWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header row with slot number and status
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -54,7 +53,6 @@ class LoadingStateWidget extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // Provider info section
             Row(
               children: [
                 Container(
@@ -94,11 +92,9 @@ class LoadingStateWidget extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // Divider
             Container(height: 1, color: Colors.white),
             const SizedBox(height: 16),
 
-            // System status row
             Row(
               children: [
                 Container(
@@ -122,7 +118,6 @@ class LoadingStateWidget extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // Action button
             Container(
               width: double.infinity,
               height: 44,

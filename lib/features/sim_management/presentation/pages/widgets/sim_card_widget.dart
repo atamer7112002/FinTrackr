@@ -29,7 +29,6 @@ class SimCardWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header: SIM Name + Status Badge
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -88,8 +87,8 @@ class SimCardWidget extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       color: simCard.isActive
-                          ? const Color(0xFFE8F5E9) // Green light
-                          : const Color(0xFFFFEBEE), // Red light
+                          ? const Color(0xFFE8F5E9)
+                          : const Color(0xFFFFEBEE),
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
                         color: simCard.isActive
@@ -118,10 +117,8 @@ class SimCardWidget extends StatelessWidget {
           const Divider(height: 1, color: Color(0xFFEEEEEE)),
           const SizedBox(height: 24),
 
-          // Provider Info Row
           Row(
             children: [
-              // Purple Icon
               Container(
                 width: 56,
                 height: 56,
@@ -137,7 +134,6 @@ class SimCardWidget extends StatelessWidget {
               ),
               const SizedBox(width: 16),
 
-              // Provider Name
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -159,7 +155,6 @@ class SimCardWidget extends StatelessWidget {
                 ),
               ),
 
-              // Signal Strength
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -189,7 +184,6 @@ class SimCardWidget extends StatelessWidget {
           const Divider(height: 1, color: Color(0xFFEEEEEE)),
           const SizedBox(height: 24),
 
-          // System Status Row
           Row(
             children: [
               Icon(
@@ -234,7 +228,7 @@ class SimCardWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              // Show Network Type if connected
+
               if (simCard.connectionStatus == ConnectionStatus.connected) ...[
                 const SizedBox(width: 8),
                 Text(
@@ -251,11 +245,9 @@ class SimCardWidget extends StatelessWidget {
 
           const SizedBox(height: 24),
 
-          // Action Button
           BlocConsumer<SimBloc, SimState>(
             listener: (context, state) {
               if (state is SimLoaded) {
-                // Triggered when sync completes
                 ScaffoldMessenger.of(context).clearSnackBars();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -287,7 +279,6 @@ class SimCardWidget extends StatelessWidget {
                           if (isConnected) {
                             context.read<SimBloc>().add(SyncSimCards());
                           } else {
-                            // Retry connection logic could go here or just refresh
                             context.read<SimBloc>().add(RefreshSimCards());
                           }
                         },
@@ -328,11 +319,10 @@ class SimCardWidget extends StatelessWidget {
   }
 
   Widget _buildSignalBar(int barIndex, int strength) {
-    // strength 0-4
     final isActive = strength >= barIndex;
     return Container(
       width: 4,
-      height: 8.0 + (barIndex * 4), // Ascending height: 12, 16, 20, 24
+      height: 8.0 + (barIndex * 4),
       decoration: BoxDecoration(
         color: isActive ? const Color(0xFF4CAF50) : Colors.grey[300],
         borderRadius: BorderRadius.circular(2),
@@ -354,7 +344,7 @@ class SimCardWidget extends StatelessWidget {
   Color _getConnectionStatusColor(ConnectionStatus status) {
     switch (status) {
       case ConnectionStatus.connected:
-        return const Color(0xFF5C6BC0); // Indigo-ish blue from image
+        return const Color(0xFF5C6BC0);
       case ConnectionStatus.connecting:
         return const Color(0xFFFF9800);
       case ConnectionStatus.notConnected:

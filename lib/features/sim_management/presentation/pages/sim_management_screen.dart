@@ -6,6 +6,8 @@ import '../bloc/sim_bloc.dart';
 import '../bloc/sim_event.dart';
 import '../bloc/sim_state.dart';
 import '../../../../core/di/injection_container.dart';
+import 'package:fintech_task/core/router/app_router.dart';
+import 'package:go_router/go_router.dart';
 import 'widgets/sim_card_widget.dart';
 import 'widgets/loading_state_widget.dart';
 import 'widgets/no_sim_state_widget.dart';
@@ -40,7 +42,6 @@ class _SimManagementScreenState extends State<SimManagementScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      // Immediately check permissions and reload when app resumes
       Future.delayed(const Duration(milliseconds: 300), () {
         _checkPermissionsAndReload();
       });
@@ -52,7 +53,6 @@ class _SimManagementScreenState extends State<SimManagementScreen>
     final smsPermission = await Permission.sms.isGranted;
 
     if (phonePermission && smsPermission && mounted) {
-      // Force reload to clear PermissionDenied state
       _simBloc.add(LoadSimCards());
     }
   }
@@ -138,9 +138,9 @@ class _SimManagementScreenState extends State<SimManagementScreen>
                     const SizedBox(width: 16),
                     Expanded(
                       child: _buildActionButton(
-                        icon: Icons.settings_outlined,
-                        label: 'Settings',
-                        onTap: () {},
+                        icon: Icons.message_outlined,
+                        label: 'Scan Messages',
+                        onTap: () => context.push(AppRoutes.smsSync),
                       ),
                     ),
                   ],

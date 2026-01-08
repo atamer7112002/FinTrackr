@@ -16,7 +16,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   bool _isLoading = false;
   bool _isPasswordVisible = false;
-  AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
+  bool _isSubmitted = false;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,6 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Form(
             key: _formKey,
-            autovalidateMode: _autovalidateMode,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -102,14 +101,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         controller: _phoneController,
                         keyboardType: TextInputType.phone,
                         onChanged: (_) {
-                          if (_autovalidateMode == AutovalidateMode.disabled) {
-                            setState(() {
-                              _autovalidateMode =
-                                  AutovalidateMode.onUserInteraction;
-                            });
+                          if (_isSubmitted) {
+                            setState(() => _isSubmitted = false);
+                            _formKey.currentState?.validate();
                           }
                         },
                         validator: (value) {
+                          if (!_isSubmitted) return null;
                           if (value == null || value.trim().isEmpty) {
                             return 'Please enter your phone number';
                           }
@@ -181,14 +179,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         controller: _passwordController,
                         obscureText: !_isPasswordVisible,
                         onChanged: (_) {
-                          if (_autovalidateMode == AutovalidateMode.disabled) {
-                            setState(() {
-                              _autovalidateMode =
-                                  AutovalidateMode.onUserInteraction;
-                            });
+                          if (_isSubmitted) {
+                            setState(() => _isSubmitted = false);
+                            _formKey.currentState?.validate();
                           }
                         },
                         validator: (value) {
+                          if (!_isSubmitted) return null;
                           if (value == null || value.isEmpty) {
                             return 'Please enter your password';
                           }
@@ -349,10 +346,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _handleLogin() async {
+    setState(() => _isSubmitted = true);
     if (!_formKey.currentState!.validate()) {
-      setState(() {
-        _autovalidateMode = AutovalidateMode.onUserInteraction;
-      });
       return;
     }
 
