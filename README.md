@@ -1,4 +1,4 @@
-# Fintech SIM Manager
+# FinTrackr
 
 A secure, intelligent financial management application designed to bridge the gap between your mobile network and your financial transactions.
 
