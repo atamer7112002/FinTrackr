@@ -10,7 +10,7 @@ Built with **Flutter**, this application provides a seamless interface for manag
 
 ### Agent Login Screen
 <p align="center">
-  <img src="assets/screenshots/agent_login.png" alt="Agent Login Screen" width="30%" style="border-radius: 10px;" />
+  <img src="assets/screenshots/agent_login.jpg" alt="Agent Login Screen" width="30%" />
 </p>
 <p align="center">
   <em>Secure access to your wallet system with phone number and password authentication, featuring biometric login support.</em>
@@ -18,8 +18,8 @@ Built with **Flutter**, this application provides a seamless interface for manag
 
 ### SIM Management
 <p align="center">
-  <img src="assets/screenshots/sim_management_1.png" alt="SIM Management Screen" width="30%" style="border-radius: 10px; margin-right: 10px;" />
-  <img src="assets/screenshots/sim_management_2.png" alt="SIM Management with Success" width="30%" style="border-radius: 10px;" />
+  <img src="assets/screenshots/sim_management_1.jpg" alt="SIM Management Screen" width="30%" />
+  <img src="assets/screenshots/sim_management_2.jpg" alt="SIM Management with Success" width="30%" />
 </p>
 <p align="center">
   <em>Monitor and manage dual SIM cards with real-time network status, signal strength, and one-tap synchronization.</em>
@@ -27,7 +27,7 @@ Built with **Flutter**, this application provides a seamless interface for manag
 
 ### SMS Sync
 <p align="center">
-  <img src="assets/screenshots/sms_sync.png" alt="SMS Sync Screen" width="30%" style="border-radius: 10px;" />
+  <img src="assets/screenshots/sms_sync.jpg" alt="SMS Sync Screen" width="30%" />
 </p>
 <p align="center">
   <em>Automatically detect and sync financial SMS messages from your SIM cards with transaction details and balance information.</em>
